@@ -21,6 +21,9 @@ const mutations = {
 const getters = {
   isAuthenticated (state) {
     return state.user !== null && state.user !== undefined
+  },
+  error (state) {
+    return state.error
   }
 }
 const actions = {
@@ -42,10 +45,18 @@ const actions = {
     //   commit('setLoading', false)
     // })
   },
-  userSignIn ({commit}, payload) {
+  userSignIn ({commit, rootState}, payload) {
     // commit('setLoading', true)
-    commit('setUser', { email: payload.email })
-    router.push('/home')
+    let users = rootState.users.registeredUsers
+    users.forEach(user => {
+      if (user.email === payload.email && user.password === payload.password) {
+        commit('setError', null)
+        commit('setUser', { email: payload.email, password: payload.password })
+        router.push('/home')
+      } else {
+        commit('setError', 'You entered wrong credentials')
+      }
+    })
     // firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
     // .then(firebaseUser => {
     //   commit('setUser', {email: firebaseUser.user.email})
