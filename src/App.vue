@@ -67,7 +67,7 @@
       accountItems () {
         if (this.isAdmin) {
           return [
-            { title: 'My Account', action: '', icon: 'person', path: '/admin-account' },
+            { title: 'My Account', action: '', icon: 'person', path: '/user-account' },
             { title: 'Change password', action: 'changePassword', icon: 'fingerprint', path: '' },
             { title: 'System users', action: '', icon: 'group', path: '/system-users' }
           ]
