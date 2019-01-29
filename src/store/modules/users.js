@@ -21,13 +21,19 @@ const state = {
   ]
 }
 const getters = {
-
+  allUsers (state) {
+    return state.registeredUsers
+  },
+  userByEmail (state, email) {
+    return state.registeredUsers.find(user => user.email === email)
+  }
 }
 const actions = {
-
+  userUpdate ({commit}, payload) {
+    commit('mutateUser', {})
+  }
 }
 const mutations = {
-
 }
 export default {
   namespaced: true,

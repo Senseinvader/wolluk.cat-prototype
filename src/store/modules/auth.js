@@ -27,6 +27,12 @@ const getters = {
   },
   error (state) {
     return state.error
+  },
+  activeUser (state) {
+    return state.user
+  },
+  activeUserRoles (state) {
+    return state.user.roles
   }
 }
 const actions = {
@@ -53,7 +59,7 @@ const actions = {
     let users = rootState.users.registeredUsers
     users.forEach(user => {
       if (user.email === payload.email && user.password === payload.password) {
-        commit('setUser', { email: payload.email, password: payload.password, roles: user.roles })
+        commit('setUser', user)
         commit('setError', null)
         router.push('/home')
       } else {
@@ -79,7 +85,7 @@ const actions = {
     // firebase.auth().signOut()
     commit('setUser', null)
     commit('setError', null)
-    router.push('/')
+    // router.push('/')
   }
 }
 export default {

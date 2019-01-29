@@ -15,8 +15,8 @@
         v-menu(v-if="isAuthenticated" offset-y :nudge-width="200")
           v-btn(flat slot='activator')
             v-icon settings
+            
           v-list(light)
-
             v-list-tile(v-for='item in accountItems' :key='item.title' :to='item.path' @click='item.action') 
               v-list-tile-action
                 v-icon(left) {{ item.icon }}
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+  import router from '@/router'
+
   export default {
     data () {
       return {
@@ -86,6 +88,7 @@
     methods: {
       userSignOut () {
         this.$store.dispatch('auth/userSignOut')
+        router.push('/')
       }
     }
   }
