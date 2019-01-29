@@ -16,15 +16,17 @@
           v-btn(flat slot='activator')
             v-icon settings
           v-list(light)
-            v-list-tile(@click='userSignOut') 
+
+            v-list-tile(v-for='item in accountItems' :key='item.title' :to='item.path' @click='item.action') 
               v-list-tile-action
-                v-icon(left) account_circle
-              v-list-tile-title My account
+                v-icon(left) {{ item.icon }}
+              v-list-tile-title {{ item.title }}
+
             v-divider
             v-list-tile(@click='userSignOut') 
               v-list-tile-action
                 v-icon(left) exit_to_app
-              v-list-tile-title Sign Out
+              v-list-tile-title Sign off
     v-content
       router-view
 </template>
@@ -44,6 +46,9 @@
       isAuthenticated () {
         return this.$store.getters['auth/isAuthenticated']
       },
+      isAdmin () {
+        return this.$store.getters['auth/isAdmin']
+      },
       menuItems () {
         if (this.isAuthenticated) {
           return [
@@ -56,6 +61,20 @@
           return [
             { title: 'Sign Up', path: '/signup', icon: 'face' },
             { title: 'Sign In', path: '/signin', icon: 'lock_open' }
+          ]
+        }
+      },
+      accountItems () {
+        if (this.isAdmin) {
+          return [
+            { title: 'My Account', action: '', icon: 'person', path: '/admin-account' },
+            { title: 'Change password', action: 'changePassword', icon: 'fingerprint', path: '' },
+            { title: 'System users', action: '', icon: 'group', path: '/system-users' }
+          ]
+        } else {
+          return [
+            { title: 'My account', action: '', icon: 'person', path: '/user-account' },
+            { title: 'Change password', action: 'changePassword', icon: 'fingerprint', path: '' }
           ]
         }
       },

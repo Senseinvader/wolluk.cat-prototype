@@ -22,6 +22,9 @@ const getters = {
   isAuthenticated (state) {
     return state.user !== null && state.user !== undefined
   },
+  isAdmin (state) {
+    return state.user.roles.admin === true
+  },
   error (state) {
     return state.error
   }
@@ -50,8 +53,8 @@ const actions = {
     let users = rootState.users.registeredUsers
     users.forEach(user => {
       if (user.email === payload.email && user.password === payload.password) {
+        commit('setUser', { email: payload.email, password: payload.password, roles: user.roles })
         commit('setError', null)
-        commit('setUser', { email: payload.email, password: payload.password })
         router.push('/home')
       } else {
         commit('setError', 'You entered wrong credentials')
@@ -75,6 +78,7 @@ const actions = {
   userSignOut ({commit}) {
     // firebase.auth().signOut()
     commit('setUser', null)
+    commit('setError', null)
     router.push('/')
   }
 }
