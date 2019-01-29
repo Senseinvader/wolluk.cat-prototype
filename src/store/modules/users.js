@@ -20,6 +20,13 @@ const state = {
         designer: false}}
   ]
 }
+const mutations = {
+  mutateUser (state, payload) {
+    let userToUpdate = state.registeredUsers.find(user => user.id === payload.id)
+    let userIndex = state.registeredUsers.indexOf(userToUpdate)
+    state.registeredUsers[userIndex] = payload
+  }
+}
 const getters = {
   allUsers (state) {
     return state.registeredUsers
@@ -29,11 +36,9 @@ const getters = {
   }
 }
 const actions = {
-  userUpdate ({commit}, payload) {
-    commit('mutateUser', {})
+  mutateUser ({commit}, payload) {
+    commit('mutateUser', payload)
   }
-}
-const mutations = {
 }
 export default {
   namespaced: true,
