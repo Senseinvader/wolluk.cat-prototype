@@ -8,21 +8,53 @@
       </v-flex>
       <v-flex xs7 md4>
         <v-form >
-          <v-text-field v-model="user.email" label="e-mail address" disabled ></v-text-field>
-          <v-text-field v-model="user.displayName" label="User Name" :rules='nameRules' ></v-text-field>
-          <v-checkbox v-model="user.roles.admin" label='Administrator' disabled ></v-checkbox>
-          <v-checkbox v-model="user.roles.editor" label='Editor' disabled ></v-checkbox>
-          <v-checkbox v-model="user.roles.translator" label='Translator' disabled ></v-checkbox>
-          <v-checkbox v-model="user.roles.designer" label='Designer' disabled ></v-checkbox>
+          <v-text-field v-model="user.email" label="e-mail address" readonly solo></v-text-field>
+          <v-text-field v-model="user.displayName" label="User Name" :rules='nameRules' counter="20" solo clearable></v-text-field>
+          <v-checkbox v-model="user.roles.admin" label='Administrator' readonly color='green'></v-checkbox>
+          <v-checkbox v-model="user.roles.editor" label='Editor' readonly color='green'></v-checkbox>
+          <v-checkbox v-model="user.roles.translator" label='Translator' readonly color='green'></v-checkbox>
+          <v-checkbox v-model="user.roles.designer" label='Designer' readonly color='green'></v-checkbox>
           <v-layout row wrap justify-center mb-3>
             <v-btn flat class='red--text' @click='openPassForm'>reset password</v-btn>
           </v-layout>
           <v-layout row wrap justify-center>
             <v-flex xs12 md12 v-if="passForm">
               <v-form ref='form' v-model='valid'>
-                <v-text-field label="Old Password" :rules="oldPassRules" required></v-text-field>
-                <v-text-field label="New Password" v-model='match' required></v-text-field>
-                <v-text-field label="Repeat new Password" v-model='model' :rules='newPassRules' required></v-text-field>
+                <!-- <v-layout v-for='(item, index) in itemsPass' :key="index">
+                  <v-text-field 
+                    :label='item.label'
+                    :rules='item.rules'
+                    required
+                    :append-icon="item.visibility ? 'visibility_off' : 'visibility'"
+                    :type="item.visibility ? 'text' : 'password'"
+                    @click:append="item.visibility = !item.visibility"
+                    ></v-text-field>
+                </v-layout> -->
+                <v-text-field 
+                  label="Old Password" 
+                  :rules="oldPassRules" 
+                  required 
+                  :append-icon="show1 ? 'visibility_off' : 'visibility'"
+                  :type="show1 ? 'text' : 'password'"
+                  @click:append="show1 = !show1"
+                  ></v-text-field>
+                <v-text-field 
+                  label="New Password" 
+                  v-model='match' 
+                  required 
+                  :append-icon="show2 ? 'visibility_off' : 'visibility'"
+                  :type="show2 ? 'text' : 'password'"
+                  @click:append="show2 = !show2"
+                  ></v-text-field>
+                <v-text-field 
+                  label="Repeat new Password" 
+                  v-model='model' 
+                  :rules='newPassRules' 
+                  required 
+                  :append-icon="show3 ? 'visibility_off' : 'visibility'"
+                  :type="show3 ? 'text' : 'password'"
+                  @click:append="show3 = !show3"
+                  ></v-text-field>
                 <v-layout row wrap justify-center mb-4>
                   <v-btn flat color='green' @click="closePassForm">cancel</v-btn>
                   <v-btn dark color='green' @click='handleChangePass' :disabled='!valid'>submit changes</v-btn>  
@@ -58,12 +90,20 @@ export default {
         v => (v === this.user.password) || 'Wrong current password'
       ],
       newPassRules: [
-        v => v === this.match || 'Passwords dont match'
+        v => v === this.match || 'Passwords does not match'
       ],
       user: null,
       passForm: false,
       match: '',
-      model: ''
+      model: '',
+      show1: false,
+      show2: false,
+      show3: false,
+      itemsPass: [
+            { label: 'Old Password', rules: 'oldPassRules', visibility: 'show1', model: undefined },
+            { label: 'New Password', rules: undefined, visibility: 'show2', model: 'match' },
+            { label: 'Repeat New Password', rules: 'newPassRules', visibility: 'show3', model: 'model' }
+      ]
     }
   },
   watch: {
