@@ -20,16 +20,14 @@
           <v-layout row wrap justify-center>
             <v-flex xs12 md12 v-if="passForm">
               <v-form ref='form' v-model='valid'>
-                <!-- <v-layout v-for='(item, index) in itemsPass' :key="index">
-                  <v-text-field 
-                    :label='item.label'
-                    :rules='item.rules'
-                    required
-                    :append-icon="item.visibility ? 'visibility_off' : 'visibility'"
-                    :type="item.visibility ? 'text' : 'password'"
-                    @click:append="item.visibility = !item.visibility"
-                    ></v-text-field>
-                </v-layout> -->
+                <!-- <v-text-field v-for="(item, itemName) in itemsPass" :key="itemName"
+                  label="item.label"
+                  :rules="item.rules"
+                  required
+                  :append-icon="item.visibility ? 'visibility_off' : 'visibility'"
+                  :type="item.visibility ? 'text' : 'password'"
+                  @click:append="item.visibility = !item.visibility"
+                  ></v-text-field> -->
                 <v-text-field 
                   label="Old Password" 
                   :rules="oldPassRules" 
@@ -104,9 +102,26 @@ export default {
       show2: false,
       show3: false,
       itemsPass: [
-            { label: 'Old Password', rules: 'oldPassRules', visibility: 'show1', model: undefined },
-            { label: 'New Password', rules: undefined, visibility: 'show2', model: 'match' },
-            { label: 'Repeat New Password', rules: 'newPassRules', visibility: 'show3', model: 'model' }
+        { label: 'Old Password',
+          rules: [
+            v => !!v || 'Field is reuquired',
+            v => (v === this.user.password) || 'Wrong current password'
+          ],
+          visibility: this.show1,
+          model: undefined
+        },
+        { label: 'New Password',
+          rules: undefined,
+          visibility: false,
+          model: this.match
+        },
+        { label: 'Repeat New Password',
+          rules: [
+            v => v === this.match || 'Passwords does not match'
+          ],
+          visibility: false,
+          model: this.model
+        }
       ]
     }
   },
