@@ -3,34 +3,49 @@
 
     v-flex(mb-3="")
       v-list-tile
-        v-list-tile-content(mb-4="")
-          v-text-field(label="Search" clearable)
+        v-list-tile-content
+          v-text-field(label="Search" v-model="searchCriteria" clearable @keyup="addStringToFilterSet" mt-5="")
 
     v-list-group(:value="true")
       v-list-tile(slot="activator")
-        v-list-tile-content {{ filters.label }}
+        v-list-tile-content {{ roleFilters.label }}
       
-      v-list-tile(v-for="(role, roleName) in filters.roles" :key="roleName" )
+      v-list-tile(v-for="(role, roleName) in roleFilters.roles" :key="roleName" )
         v-list-tile-action
-          v-checkbox(hide-details v-model="filterSet[roleName]")
+          v-checkbox(hide-details v-model="filterSet[roleName]" @change="sendSearchQuery")
         v-list-tile-content
           v-list-tile-title {{ role.name }}
 
 </template>
 <script>
-// import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      filterSet: {}
+      searchCriteria: '',
+      filterSet: {searchCriteria: '', admin: false, editor: false, translator: false, designer: false}
+      // filterSet: {
+      //   searchCriteria: null,
+      //   roleCriteria: {
+      //     admin: false,
+      //     editor: false,
+      //     translator: false,
+      //     designer: false
+      //   }
+      // }
     }
   },
   computed: {
-    // ...mapGetters({
-    //   filters: 'objects/searchcriterias'
-    // })
-    filters () {
-      return this.$store.state.users.searchCriterias
+    roleFilters () {
+      return this.$store.state.users.roleSearchFilters
+    }
+  },
+  methods: {
+    addStringToFilterSet () {
+      this.filterSet.searchCriteria = this.searchCriteria
+      this.sendSearchQuery()
+    },
+    sendSearchQuery () {
+      this.$store.dispatch('users/findUsers', this.filterSet)
     }
   }
 }
