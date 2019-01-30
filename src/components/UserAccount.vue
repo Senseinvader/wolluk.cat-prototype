@@ -78,6 +78,10 @@
 
 export default {
   name: 'UserAccount',
+  created () {
+    this.user = this.$store.getters['auth/activeUser']
+    console.log(this.user.password)
+  },
   data () {
     return {
       valid: true,
@@ -109,10 +113,6 @@ export default {
   watch: {
     match: 'validateField',
     model: 'validateField'
-  },
-  created () {
-    this.user = this.$store.getters['auth/activeUser']
-    console.log(this.user.password)
   },
   methods: {
     handleUpdate () {

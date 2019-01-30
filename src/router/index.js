@@ -23,7 +23,15 @@ const routerOptions = [
     meta: { requiresAuth: true }
   },
   { path: '/user-account', component: 'UserAccount', meta: { requiresAuth: true } },
-  { path: '/system-users', component: 'SystemUsers', meta: { requiresAuth: true } },
+  {
+    path: '/system-users',
+    name: 'systemUsers',
+    components:
+      { default: 'SystemUsers', sidebar: 'UsersSidebar' },
+    meta: { requiresAuth: true }
+  },
+  { path: '/system-users/new', component: 'UserEdit', meta: { requiresAuth: true } },
+  { path: '/system-users/:userName', component: 'UserEdit', meta: { requiresAuth: true } },
   { path: '*', component: 'NotFound' }
 ]
 
