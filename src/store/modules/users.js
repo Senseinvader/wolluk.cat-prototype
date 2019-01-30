@@ -17,8 +17,27 @@ const state = {
         admin: false,
         editor: true,
         translator: false,
+        designer: false}},
+    {id: '-LWMS-pfJ937K4i3651l7Q', // this is id similar to Firebase (auto gen.)
+      displayName: 'John Doe',
+      email: 'john@example.com',
+      password: 'pass',
+      roles: {
+        admin: false,
+        editor: false,
+        translator: true,
         designer: false}}
-  ]
+  ],
+  searchCriterias: {
+    label: 'User Roles',
+    roles: {
+      admin: {name: 'Administrator', value: false},
+      editor: {name: 'Editor', value: false},
+      translator: {name: 'Translator', value: false},
+      designer: {name: 'Designer', value: false}
+    }
+  },
+  filteredUserrs: []
 }
 const mutations = {
   mutateUser (state, payload) {

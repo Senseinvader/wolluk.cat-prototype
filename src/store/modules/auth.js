@@ -23,7 +23,7 @@ const getters = {
     return state.user !== null && state.user !== undefined
   },
   isAdmin (state) {
-    return state.user.roles.admin === true
+    return state.user !== null && state.user.roles.admin === true
   },
   error (state) {
     return state.error
@@ -57,15 +57,19 @@ const actions = {
   userSignIn ({commit, rootState}, payload) {
     // commit('setLoading', true)
     let users = rootState.users.registeredUsers
+    let foundUser = null
     users.forEach(user => {
       if (user.email === payload.email && user.password === payload.password) {
-        commit('setUser', user)
-        commit('setError', null)
-        router.push('/home')
-      } else {
-        commit('setError', 'You entered wrong credentials')
+        foundUser = user
       }
     })
+    if (foundUser) {
+      commit('setUser', foundUser)
+      commit('setError', null)
+      router.push('/home')
+    } else {
+      commit('setError', 'You entered wrong credentials')
+    }
     // firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
     // .then(firebaseUser => {
     //   commit('setUser', {email: firebaseUser.user.email})

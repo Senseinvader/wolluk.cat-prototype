@@ -87,8 +87,8 @@
     },
     methods: {
       userSignOut () {
-        this.$store.dispatch('auth/userSignOut')
         router.push('/')
+        this.$store.dispatch('auth/userSignOut')
       }
     }
   }

@@ -8,9 +8,9 @@
 
     v-list-group(:value="true")
       v-list-tile(slot="activator")
-        v-list-tile-content {{ label }}
+        v-list-tile-content {{ filters.label }}
       
-      v-list-tile(v-for="(role, roleName) in roles" :key="roleName" )
+      v-list-tile(v-for="(role, roleName) in filters.roles" :key="roleName" )
         v-list-tile-action
           v-checkbox(hide-details v-model="filterSet[roleName]")
         v-list-tile-content
@@ -18,27 +18,20 @@
 
 </template>
 <script>
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      label: 'User Roles',
-      roles: {
-        admin: {name: 'Administrator', value: false},
-        editor: {name: 'Editor', value: false},
-        translator: {name: 'Translator', value: false},
-        designer: {name: 'Designer', value: false}
-      },
       filterSet: {}
     }
   },
-  updated () {
-    console.log(this.filterSet)
-  },
   computed: {
-    ...mapGetters({
-      filters: 'objects/structure'
-    })
+    // ...mapGetters({
+    //   filters: 'objects/searchcriterias'
+    // })
+    filters () {
+      return this.$store.state.users.searchCriterias
+    }
   }
 }
 </script>
