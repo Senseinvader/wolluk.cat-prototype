@@ -19,7 +19,7 @@
           </v-layout>
           <v-layout row wrap justify-center>
             <v-flex xs12 md12 v-if="passForm">
-              <v-form ref='form' v-model='valid'>
+              <v-form ref='form'>
                 <!-- <v-text-field v-for="(item, itemName) in itemsPass" :key="itemName"
                   label="item.label"
                   :rules="item.rules"
@@ -55,7 +55,7 @@
                   ></v-text-field>
                 <v-layout row wrap justify-center mb-4>
                   <v-btn flat color='green' @click="closePassForm">cancel</v-btn>
-                  <v-btn dark color='green' @click='handleChangePass' :disabled='!valid'>submit changes</v-btn>  
+                  <v-btn dark color='green' @click='handleChangePass' >submit changes</v-btn>  
                 </v-layout>            
               </v-form>
             </v-flex>
@@ -82,7 +82,6 @@ export default {
   },
   data () {
     return {
-      valid: true,
       nameRules: [
         v => !!v || 'Name is required',
         v => (v && v.length < 20) || 'Name must be less than 20 characters'
@@ -96,8 +95,8 @@ export default {
       ],
       user: null,
       passForm: false,
-      match: '',
-      model: '',
+      match: null,
+      model: null,
       show1: false,
       show2: false,
       show3: false,
@@ -141,8 +140,10 @@ export default {
       this.passForm = false
     },
     handleChangePass () {
-      this.passForm = false
-      this.user.password = this.model
+      if (this.$refs.form.validate()) {
+        this.passForm = false
+        this.user.password = this.model
+      }
     },
     validateField () {
       this.$refs.form.validate()
