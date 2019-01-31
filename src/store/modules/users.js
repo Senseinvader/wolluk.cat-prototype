@@ -6,9 +6,9 @@ const state = {
       password: 'pass',
       roles: {
         admin: true,
-        editor: true,
-        translator: true,
-        designer: true}},
+        editor: false,
+        translator: false,
+        designer: false}},
     {id: '-LWMS-pfJ937K4i4001l7Q', // this is id similar to Firebase (auto gen.)
       displayName: 'Janusz Cebula',
       email: 'janusz@example.com',
