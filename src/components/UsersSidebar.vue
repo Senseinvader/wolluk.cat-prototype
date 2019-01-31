@@ -23,15 +23,6 @@ export default {
     return {
       searchCriteria: '',
       filterSet: {searchCriteria: '', admin: false, editor: false, translator: false, designer: false}
-      // filterSet: {
-      //   searchCriteria: null,
-      //   roleCriteria: {
-      //     admin: false,
-      //     editor: false,
-      //     translator: false,
-      //     designer: false
-      //   }
-      // }
     }
   },
   computed: {

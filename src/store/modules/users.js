@@ -1,8 +1,8 @@
 import slugify from 'slugify'
 
 const state = {
-  registeredUsers: [
-    {id: '-LWMS-pfJ937K4iwRl7Q', // this is id similar to Firebase (auto gen.)
+  initialRegisteredUsers: [
+    {id: '-LWMS-pfJ937K4iwRlkj', // this is id similar to Firebase (auto gen.)
       displayName: 'Tomek Drazek',
       email: 'tomek@wolluk.com',
       password: 'pass',
@@ -12,7 +12,7 @@ const state = {
         editor: false,
         translator: false,
         designer: false}},
-    {id: '-LWMS-pfJ937K4i4001l7Q', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937K4i4001llp', // this is id similar to Firebase (auto gen.)
       displayName: 'Janusz Cebula',
       email: 'janusz@example.com',
       password: 'pass',
@@ -22,7 +22,7 @@ const state = {
         editor: true,
         translator: false,
         designer: false}},
-    {id: '-LWMS-pfJ937K4i3651l7Q', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937K4i3651lcv', // this is id similar to Firebase (auto gen.)
       displayName: 'John Doe',
       email: 'john@example.com',
       password: 'pass',
@@ -32,7 +32,7 @@ const state = {
         editor: false,
         translator: true,
         designer: false}},
-    {id: '-LWMS-pfJ937R8i3651l7Q', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937R8i3651lrt', // this is id similar to Firebase (auto gen.)
       displayName: 'Tomas Piper',
       email: 'pete@example.com',
       password: 'pass',
@@ -42,9 +42,9 @@ const state = {
         editor: false,
         translator: true,
         designer: false}},
-    {id: '-LWMS-pfJ937R8i6951l7Q', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937R886951lee', // this is id similar to Firebase (auto gen.)
       displayName: 'Tomas Connor',
-      email: 'pete@example.com',
+      email: 'tom1@example.com',
       password: 'pass',
       slug: 'tomas-connor',
       roles: {
@@ -75,6 +75,10 @@ const mutations = {
   },
   clearFilteredUsers (state) {
     state.filteredUsers = state.registeredUsers
+  },
+  deleteUser (state, payload) {
+    console.log('delete user')
+    state.registeredUsers = payload
   }
 }
 const getters = {
@@ -107,7 +111,13 @@ const actions = {
   clearFilteredUsers ({commit}) {
     commit('clearFilteredUsers')
   },
-  findUsers ({commit, dispatch}, payload) {
+  deleteUser ({commit}, payload) {
+    console.log(state.registeredUsers)
+    let newRegisteredUsers = state.registeredUsers.filter(user => user.id !== payload.id)
+    console.log(state.registeredUsers.length, newRegisteredUsers.length)
+    commit('deleteUser', newRegisteredUsers)
+  },
+  findUsers ({commit}, payload) {
     // TODO put in mutation payload all filtered users from filterSet (action payload)
     let nameResults = []
     let roleResults = []

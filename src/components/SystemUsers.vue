@@ -23,9 +23,20 @@
           </v-layout>
           <v-divider></v-divider>
           <v-card-actions>
-            <v-btn flat color='green'>
-              <span>delete</span>
-            </v-btn>
+
+            <v-dialog v-model='dialog' persistent max-width='300'>
+              <v-btn flat color='green' slot='activator' @click='prepareDeleteCandidate(user)'><span>delete</span></v-btn>
+              <v-card>
+                <v-card-title class='subheading'>Delete this user?</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn dark color='green' @click='dialog=false'>cancel</v-btn>
+                  <v-btn dark color='error' @click='handleDeleteUser'>delete</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            
+
             <v-btn flat color='green' :to="{name: 'editUser', params: {user_name: user.slug}}">
               <span>edit</span>
             </v-btn>
@@ -50,6 +61,8 @@ export default {
   name: 'SystemUsers',
   data () {
     return {
+      dialog: false,
+      deleteCandidate: null
     }
   },
   created () {
@@ -69,6 +82,14 @@ export default {
     }
   },
   methods: {
+    handleDeleteUser () {
+      this.$store.dispatch('users/deleteUser', this.deleteCandidate)
+      this.$store.dispatch('users/clearFilteredUsers')
+      this.dialog = false
+    },
+    prepareDeleteCandidate (user) {
+      this.deleteCandidate = user
+    }
   }
 }
 </script>
