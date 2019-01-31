@@ -15,7 +15,7 @@
                 </div>
               </v-card-title>
             </v-flex>
-            <v-flex xs3 offset-2>
+            <v-flex xs3 offset-xs1>
               <v-btn large fab class='green'>
                 <v-icon large color='white'>person</v-icon>
               </v-btn>
@@ -33,10 +33,14 @@
         </v-card>
       </v-flex>
     </v-layout>
+
     <v-layout>
-      <v-btn fab bottom right color="pink" dark fixed :to="{name:'createUser'}">
-        <v-icon>add</v-icon>
+      <v-tooltip top>
+        <v-btn fab bottom right color="pink" dark fixed :to="{name:'createUser'}" slot='activator'>
+          <v-icon>add</v-icon>
       </v-btn>
+      <span>Add new user</span>
+      </v-tooltip>
     </v-layout>
   </v-container>
 </template>
