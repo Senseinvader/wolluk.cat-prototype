@@ -4,6 +4,7 @@ const state = {
       displayName: 'Tomek Drazek',
       email: 'tomek@wolluk.com',
       password: 'pass',
+      slug: 'tomek-drazek',
       roles: {
         admin: true,
         editor: false,
@@ -13,6 +14,7 @@ const state = {
       displayName: 'Janusz Cebula',
       email: 'janusz@example.com',
       password: 'pass',
+      slug: 'janusz-cebula',
       roles: {
         admin: false,
         editor: true,
@@ -22,6 +24,7 @@ const state = {
       displayName: 'John Doe',
       email: 'john@example.com',
       password: 'pass',
+      slug: 'john-doe',
       roles: {
         admin: false,
         editor: false,
@@ -31,6 +34,7 @@ const state = {
       displayName: 'Tomas Piper',
       email: 'pete@example.com',
       password: 'pass',
+      slug: 'tomas-piper',
       roles: {
         admin: false,
         editor: false,
@@ -40,6 +44,7 @@ const state = {
       displayName: 'Tomas Connor',
       email: 'pete@example.com',
       password: 'pass',
+      slug: 'tomas-connor',
       roles: {
         admin: false,
         editor: false,
