@@ -73,20 +73,12 @@
 
 
 <script>
-import slugify from 'slugify'
 
 export default {
   name: 'UserAccount',
   created () {
     this.user = this.$store.getters['auth/activeUser']
     console.log(this.user.password)
-  },
-  updated () {
-    this.user.slug = slugify(this.user.displayName, {
-      replacement: '-',
-      remove: /[*+~.()'"!:@]/g,
-      lower: true
-    })
   },
   data () {
     return {

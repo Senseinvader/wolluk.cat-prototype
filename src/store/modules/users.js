@@ -1,3 +1,5 @@
+import slugify from 'slugify'
+
 const state = {
   registeredUsers: [
     {id: '-LWMS-pfJ937K4iwRl7Q', // this is id similar to Firebase (auto gen.)
@@ -88,6 +90,12 @@ const getters = {
 }
 const actions = {
   mutateUser ({commit}, payload) {
+    payload.slug = slugify(payload.displayName, {
+      replacement: '-',
+      remove: /[*+~.()'"!:@]/g,
+      lower: true
+    })
+    console.log(payload.slug)
     commit('mutateUser', payload)
   },
   clearFilteredUsers ({commit}) {
