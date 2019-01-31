@@ -81,11 +81,17 @@ const getters = {
   allUsers (state) {
     return state.registeredUsers
   },
-  userByEmail (state, email) {
-    return state.registeredUsers.find(user => user.email === email)
-  },
+  // userByEmail (state, email) {
+  //   return state.registeredUsers.find(user => user.email === email)
+  // },
   filteredUsers (state) {
     return state.filteredUsers
+  },
+  userBySlug (state) {
+    // return state.registeredUsers.find(user => user.slug === slug)
+    return slug => state.registeredUsers.find(user => {
+      return user.slug === slug
+    })
   }
 }
 const actions = {

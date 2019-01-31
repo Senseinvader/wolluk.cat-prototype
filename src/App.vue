@@ -12,12 +12,12 @@
         v-btn(flat v-for='item in menuItems' :key='item.title' :to='item.path')
           v-icon(left dark) {{ item.icon }}
           | {{ item.title }}
-        v-menu(v-if="isAuthenticated" offset-y :nudge-width="200")
+        v-menu(v-if="isAuthenticated" offset-y offset-x)
           v-btn(flat slot='activator')
             v-icon settings
             
           v-list(light)
-            v-list-tile(v-for='item in accountItems' :key='item.title' :to='item.path' @click='item.action') 
+            v-list-tile(v-for='item in accountItems' :key='item.title' :to='item.path') 
               v-list-tile-action
                 v-icon(left) {{ item.icon }}
               v-list-tile-title {{ item.title }}

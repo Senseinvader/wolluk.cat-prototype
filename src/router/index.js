@@ -30,8 +30,14 @@ const routerOptions = [
       { default: 'SystemUsers', sidebar: 'UsersSidebar' },
     meta: { requiresAuth: true }
   },
-  { path: '/system-users/new', component: 'UserEdit', meta: { requiresAuth: true } },
-  { path: '/system-users/:userName', component: 'UserEdit', meta: { requiresAuth: true } },
+  {
+    path: '/system-users/new',
+    name: 'createUser',
+    components:
+      {default: 'CreateUser'},
+    meta: { requiresAuth: true }
+  },
+  { path: '/system-users/:user_name', name: 'editUser', component: 'EditUser', meta: { requiresAuth: true } },
   { path: '*', component: 'NotFound' }
 ]
 

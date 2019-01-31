@@ -11,6 +11,8 @@ import colors from 'vuetify/es5/util/colors'
 import {
   Vuetify,
   VApp,
+  VCard,
+  VDialog,
   VNavigationDrawer,
   VFooter,
   VList,
@@ -35,6 +37,8 @@ import '../node_modules/vuetify/src/stylus/app.styl'
 Vue.use(Vuetify, {
   components: {
     VApp,
+    VCard,
+    VDialog,
     VNavigationDrawer,
     VFooter,
     VList,
