@@ -1,5 +1,5 @@
 <template>
-  <UserPageComponent v-bind:read-only="false" v-bind:user="user"/>
+  <UserPageComponent v-bind:read-only="false" v-bind:user="userTemplate" v-bind:pass-form-visibility='true'/>
 </template>
 
 
@@ -11,17 +11,18 @@ export default {
   name: 'createUser',
   data () {
     return {
-      user: {
-        id: '',
-        displayName: '',
-        email: '',
+      userTemplate: {
+        id: null,
+        displayName: null,
+        email: null,
         password: ' ',
-        slug: '',
+        slug: null,
         roles: {
           admin: false,
           editor: false,
           translator: false,
-          designer: false}}
+          designer: false}
+      }
     }
   }
 }

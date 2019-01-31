@@ -1,5 +1,5 @@
 <template>
-  <UserPageComponent v-bind:read-only="true" v-bind:user="user"/>
+  <UserPageComponent v-bind:read-only="true" v-bind:user="user" v-bind:pass-form-visibility='false'/>
 </template>
 
 

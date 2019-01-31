@@ -8,7 +8,7 @@
       </v-flex>
       <v-flex xs7 md4>
         <v-form >
-          <v-text-field v-model="user.email" label="e-mail address" :readonly='readOnly' solo></v-text-field>
+          <v-text-field v-model="user.email" label="e-mail address" :rules='emailRules' :readonly='readOnly' solo></v-text-field>
           <v-text-field v-model="user.displayName" label="User Name" :rules='nameRules' counter="20" solo clearable></v-text-field>
           <v-checkbox v-model="user.roles.admin" label='Administrator' :readonly='readOnly' color='green'></v-checkbox>
           <v-checkbox v-model="user.roles.editor" label='Editor' :readonly='readOnly' color='green'></v-checkbox>
@@ -55,7 +55,7 @@
                   ></v-text-field>
                 <v-layout row wrap justify-center mb-4>
                   <v-btn flat color='green' @click="closePassForm">cancel</v-btn>
-                  <v-btn dark color='green' @click='handleChangePass' >submit changes</v-btn>  
+                  <v-btn dark color='green' @click='handleChangePass'>submit changes</v-btn>  
                 </v-layout>            
               </v-form>
             </v-flex>
@@ -63,7 +63,7 @@
           <v-divider></v-divider>
           <v-layout row wrap justify-center pa-4>
             <v-btn flat class='green--text'>cancel</v-btn>
-            <v-btn dark color='green' @click='handleUpdate'>submit</v-btn>
+            <v-btn dark color='green' @click='handleUpdate' :to="{name:'Home'}">submit</v-btn>
           </v-layout>
         </v-form>
       </v-flex>
@@ -73,6 +73,7 @@
 
 
 <script>
+import uuid from 'uuid/v1'
 
 export default {
   name: 'UserAccount',
@@ -82,6 +83,9 @@ export default {
     },
     user: {
       type: Object
+    },
+    passFormVisibility: {
+      type: Boolean
     }
   },
   // created () {
@@ -101,7 +105,11 @@ export default {
       newPassRules: [
         v => v === this.match || 'Passwords does not match'
       ],
-      passForm: false,
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+/.test(v) || 'E-mail must be valid'
+      ],
+      passForm: this.passFormVisibility,
       match: null,
       model: null,
       show1: false,
@@ -137,8 +145,11 @@ export default {
   },
   methods: {
     handleUpdate () {
+      if (!this.user.id) {
+        this.user.id = uuid()
+      }
       this.$store.dispatch('users/mutateUser', this.user)
-      console.log(this.user.displayName)
+      console.log(this.user.id)
     },
     openPassForm () {
       this.passForm = true
