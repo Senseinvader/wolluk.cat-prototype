@@ -4,9 +4,9 @@ import { store } from '@/store'
 // import firebase from '@/firebase'
 
 const routerOptions = [
-  { path: '/', component: 'Landing' },
-  { path: '/signin', component: 'SignIn' },
-  { path: '/signup', component: 'SignUp' },
+  { path: '/', name: 'Landing', component: 'Landing' },
+  { path: '/signin', name: 'SignIn', component: 'SignIn' },
+  { path: '/signup', name: 'SignUp', component: 'SignUp' },
   { path: '/home', name: 'Home', component: 'Home', meta: { requiresAuth: true } },
   {
     path: '/objects',
@@ -22,7 +22,7 @@ const routerOptions = [
       { default: 'ObjectEdit' },
     meta: { requiresAuth: true }
   },
-  { path: '/user-account', component: 'UserAccount', meta: { requiresAuth: true } },
+  { path: '/user-account', name: 'userAccount', component: 'UserAccount', meta: { requiresAuth: true } },
   {
     path: '/system-users',
     name: 'systemUsers',

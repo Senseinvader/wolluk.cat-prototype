@@ -6,7 +6,7 @@ const state = {
       displayName: 'Tomek Drazek',
       email: 'tomek@wolluk.com',
       password: 'pass',
-      slug: 'tomek-drazek',
+      slug: 'tomekwollukcom',
       roles: {
         admin: true,
         editor: false,
@@ -16,7 +16,7 @@ const state = {
       displayName: 'Janusz Cebula',
       email: 'janusz@example.com',
       password: 'pass',
-      slug: 'janusz-cebula',
+      slug: 'januszexamplecom',
       roles: {
         admin: false,
         editor: true,
@@ -26,7 +26,7 @@ const state = {
       displayName: 'John Doe',
       email: 'john@example.com',
       password: 'pass',
-      slug: 'john-doe',
+      slug: 'johnexamplecom',
       roles: {
         admin: false,
         editor: false,
@@ -36,7 +36,7 @@ const state = {
       displayName: 'Tomas Piper',
       email: 'pete@example.com',
       password: 'pass',
-      slug: 'tomas-piper',
+      slug: 'peteexamplecom',
       roles: {
         admin: false,
         editor: false,
@@ -46,7 +46,7 @@ const state = {
       displayName: 'Tomas Connor',
       email: 'tom1@example.com',
       password: 'pass',
-      slug: 'tomas-connor',
+      slug: 'tom1examplecom',
       roles: {
         admin: false,
         editor: false,
@@ -110,11 +110,12 @@ const getters = {
 }
 const actions = {
   mutateUser ({commit}, payload) {
-    payload.slug = slugify(payload.displayName, {
+    payload.slug = slugify(payload.email, {
       replacement: '-',
       remove: /[*+~.()'"!:@]/g,
       lower: true
     })
+    console.log(payload.slug)
     let userToUpdate = state.registeredUsers.find(user => user.id === payload.id)
     if (state.registeredUsers.indexOf(userToUpdate) !== -1) {
       console.log('yes we can update')
