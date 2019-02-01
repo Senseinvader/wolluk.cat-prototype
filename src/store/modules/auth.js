@@ -1,5 +1,7 @@
 import router from '@/router'
 import firebase from 'firebase'
+import db from '../../main'
+import slugify from 'slugify'
 
 const state = {
   user: null,
@@ -24,7 +26,7 @@ const getters = {
     return state.user !== null && state.user !== undefined
   },
   isAdmin (state) {
-    return state.user !== null && state.user.roles === true && state.user.roles.admin === true
+    return state.user !== null && state.user.roles.admin === true
   },
   error (state) {
     return state.error
@@ -49,11 +51,24 @@ const actions = {
         id: cred.user.uid,
         email: cred.user.email
       })
-      console.log(cred.user)
-      commit('setLoading', false)
-      commit('setError', false)
-      router.push('/home')
+      let newUser = {
+        id: cred.user.uid, // this is id similar to Firebase (auto gen.)
+        displayName: null,
+        email: cred.user.email,
+        slug: slugify(cred.user.email, {
+          replacement: '-',
+          remove: /[*+~.()'"!:@]/g,
+          lower: true
+        }),
+        roles: {
+          admin: true}
+      }
+      db.collection('wolluk-users').add(newUser)
+      commit('setUser', newUser)
     })
+    commit('setLoading', false)
+    commit('setError', false)
+    router.push({name: 'Home'})
     .catch(error => {
       commit('setError', error.message)
       commit('setLoading', false)
@@ -68,7 +83,7 @@ const actions = {
       })
       commit('setLoading', false)
       commit('setError', null)
-      router.push('/home')
+      router.push({name: 'Home'})
     })
     .catch(error => {
       commit('setError', error.message)

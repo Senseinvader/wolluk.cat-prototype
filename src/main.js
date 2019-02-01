@@ -91,19 +91,23 @@ Vue.config.productionTip = false
 //     unsubscribe()
 //   })
 
+let firebaseApp = null
+
 new Vue({
   el: '#app',
   router,
   store,
   render: h => h(App),
   created () {
-    firebase.initializeApp({
-      apiKey: 'AIzaSyCRZto2-DZnlKR_k_6RXmCvZkeK7C5pNVM',
-      authDomain: 'wolluk-db.firebaseapp.com',
-      databaseURL: 'https://wolluk-db.firebaseio.com',
-      projectId: 'wolluk-db',
-      storageBucket: 'wolluk-db.appspot.com'
+    firebaseApp = firebase.initializeApp({
+      apiKey: 'AIzaSyAmq1c54y4rEE58iz9RJUCQliofglSRCc8',
+      authDomain: 'ninja-smoovies.firebaseapp.com',
+      databaseURL: 'https://ninja-smoovies.firebaseio.com',
+      projectId: 'ninja-smoovies',
+      storageBucket: 'ninja-smoovies.appspot.com',
+      messagingSenderId: '232513341828'
     })
+    firebaseApp.firestore().settings({timestampsInSnapshots: true})
   }
 })
-/* eslint-disable no-new */
+export default firebaseApp.firestore()
