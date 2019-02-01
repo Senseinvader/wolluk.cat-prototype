@@ -32,8 +32,6 @@
 </template>
 
 <script>
-  import router from '@/router'
-
   export default {
     data () {
       return {
@@ -87,7 +85,6 @@
     },
     methods: {
       userSignOut () {
-        router.push('/')
         this.$store.dispatch('auth/userSignOut')
       }
     }

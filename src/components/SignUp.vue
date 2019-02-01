@@ -34,10 +34,10 @@ export default {
       return this.password === this.passwordConfirm ? true : 'Passwords don\'t match'
     },
     error () {
-      return this.$store.state.error
+      return this.$store.state.auth.error
     },
     loading () {
-      return this.$store.state.loading
+      return this.$store.state.auth.loading
     }
   },
   methods: {

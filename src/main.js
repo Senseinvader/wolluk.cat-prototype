@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import { store } from './store'
-// import firebase from '@/firebase'
+import * as firebase from 'firebase'
 import colors from 'vuetify/es5/util/colors'
 
 // A-la'carte components goes here:
@@ -91,11 +91,19 @@ Vue.config.productionTip = false
 //     unsubscribe()
 //   })
 
-// Simplified version without Firebase auth:
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  created () {
+    firebase.initializeApp({
+      apiKey: 'AIzaSyCRZto2-DZnlKR_k_6RXmCvZkeK7C5pNVM',
+      authDomain: 'wolluk-db.firebaseapp.com',
+      databaseURL: 'https://wolluk-db.firebaseio.com',
+      projectId: 'wolluk-db',
+      storageBucket: 'wolluk-db.appspot.com'
+    })
+  }
 })
+/* eslint-disable no-new */

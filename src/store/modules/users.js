@@ -62,7 +62,6 @@ const state = {
       designer: {name: 'Designer', value: false}
     }
   },
-  // registeredUsers: [],
   filteredUsers: []
 }
 const mutations = {
@@ -84,17 +83,11 @@ const mutations = {
   addUser (state, payload) {
     state.registeredUsers.push(payload)
   }
-  // digestRegisteredUsers (state, payload) {
-  //   state.registeredUsers = payload
-  // }
 }
 const getters = {
   allUsers (state) {
     return state.registeredUsers
   },
-  // userByEmail (state, email) {
-  //   return state.registeredUsers.find(user => user.email === email)
-  // },
   filteredUsers (state) {
     return state.filteredUsers
   },
