@@ -66,6 +66,8 @@ export default {
     }
   },
   created () {
+    console.log(this.$store.getters['users/registeredUsers'])
+    console.log(this.$store.getters['users/filteredUsers'])
     this.$store.dispatch('users/clearFilteredUsers')
   },
   computed: {

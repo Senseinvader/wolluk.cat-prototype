@@ -32,7 +32,7 @@ const getters = {
     return state.user
   },
   activeUserRoles (state) {
-    return state.user.roles
+    return state.user ? state.user.roles : null
   }
 }
 const actions = {

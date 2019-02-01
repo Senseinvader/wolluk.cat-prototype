@@ -1,7 +1,7 @@
 import slugify from 'slugify'
 
 const state = {
-  initialRegisteredUsers: [
+  registeredUsers: [
     {id: '-LWMS-pfJ937K4iwRlkj', // this is id similar to Firebase (auto gen.)
       displayName: 'Tomek Drazek',
       email: 'tomek@wolluk.com',
@@ -62,7 +62,7 @@ const state = {
       designer: {name: 'Designer', value: false}
     }
   },
-  registeredUsers: [],
+  // registeredUsers: [],
   filteredUsers: []
 }
 const mutations = {
@@ -83,10 +83,10 @@ const mutations = {
   },
   addUser (state, payload) {
     state.registeredUsers.push(payload)
-  },
-  digestRegisteredUsers (state, payload) {
-    state.registeredUsers = payload
   }
+  // digestRegisteredUsers (state, payload) {
+  //   state.registeredUsers = payload
+  // }
 }
 const getters = {
   allUsers (state) {
@@ -115,7 +115,9 @@ const actions = {
       remove: /[*+~.()'"!:@]/g,
       lower: true
     })
-    if (state.registeredUsers.indexOf(payload) !== -1) {
+    let userToUpdate = state.registeredUsers.find(user => user.id === payload.id)
+    if (state.registeredUsers.indexOf(userToUpdate) !== -1) {
+      console.log('yes we can update')
       commit('mutateUser', payload)
     } else {
       commit('addUser', payload)
@@ -130,10 +132,10 @@ const actions = {
     console.log(state.registeredUsers.length, newRegisteredUsers.length)
     commit('deleteUser', newRegisteredUsers)
   },
-  digestRegisteredUsers ({commit}) {
-    commit('digestRegisteredUsers', state.initialRegisteredUsers)
-  },
-  findUsers ({commit}, payload) {
+  // digestRegisteredUsers ({commit}) {
+  //   commit('digestRegisteredUsers', state.initialRegisteredUsers)
+  // },
+  findUsers ({commit, dispatch}, payload) {
     // TODO put in mutation payload all filtered users from filterSet (action payload)
     let nameResults = []
     let roleResults = []
