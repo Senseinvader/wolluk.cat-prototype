@@ -63,7 +63,7 @@ const state = {
     }
   },
   registeredUsers: [],
-  filteredUsers: null
+  filteredUsers: []
 }
 const mutations = {
   mutateUser (state, payload) {
@@ -97,6 +97,9 @@ const getters = {
   // },
   filteredUsers (state) {
     return state.filteredUsers
+  },
+  registeredUsers (state) {
+    return state.registeredUsers
   },
   userBySlug (state) {
     // return state.registeredUsers.find(user => user.slug === slug)

@@ -25,9 +25,11 @@ export default {
       alert: false
     }
   },
+  created () {
+    this.$store.dispatch('users/digestRegisteredUsers')
+  },
   methods: {
     userSignIn () {
-      this.$store.dispatch('users/digestRegisteredUsers')
       this.$store.dispatch('auth/userSignIn', { email: this.email, password: this.password })
     }
   },
