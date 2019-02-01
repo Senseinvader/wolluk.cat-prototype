@@ -62,6 +62,7 @@ const state = {
       designer: {name: 'Designer', value: false}
     }
   },
+  registeredUsers: [],
   filteredUsers: null
 }
 const mutations = {
@@ -78,6 +79,12 @@ const mutations = {
   },
   deleteUser (state, payload) {
     console.log('delete user')
+    state.registeredUsers = payload
+  },
+  addUser (state, payload) {
+    state.registeredUsers.push(payload)
+  },
+  digestRegisteredUsers (state, payload) {
     state.registeredUsers = payload
   }
 }
@@ -105,8 +112,11 @@ const actions = {
       remove: /[*+~.()'"!:@]/g,
       lower: true
     })
-    console.log(payload.slug)
-    commit('mutateUser', payload)
+    if (state.registeredUsers.indexOf(payload) !== -1) {
+      commit('mutateUser', payload)
+    } else {
+      commit('addUser', payload)
+    }
   },
   clearFilteredUsers ({commit}) {
     commit('clearFilteredUsers')
@@ -116,6 +126,9 @@ const actions = {
     let newRegisteredUsers = state.registeredUsers.filter(user => user.id !== payload.id)
     console.log(state.registeredUsers.length, newRegisteredUsers.length)
     commit('deleteUser', newRegisteredUsers)
+  },
+  digestRegisteredUsers ({commit}) {
+    commit('digestRegisteredUsers', state.initialRegisteredUsers)
   },
   findUsers ({commit}, payload) {
     // TODO put in mutation payload all filtered users from filterSet (action payload)

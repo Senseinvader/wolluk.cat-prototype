@@ -18,7 +18,7 @@
             <v-btn flat class='red--text' @click='openPassForm'>reset password</v-btn>
           </v-layout>
           <v-layout row wrap justify-center>
-            <v-flex xs12 md12 v-if="passForm">
+            <v-flex xs12 md12 v-if="passFormVisibility">
               <v-form ref='form'>
                 <!-- <v-text-field v-for="(item, itemName) in itemsPass" :key="itemName"
                   label="item.label"
