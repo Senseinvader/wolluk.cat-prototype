@@ -40,10 +40,6 @@ const getters = {
 }
 const actions = {
   userSignUp ({commit}, payload) {
-    // // Add user to /users
-    // commit('setUser', { email: payload.email })
-    // // rootState.// verify from /users/
-    // router.push('/home')
     commit('setLoading', true)
     firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
     .then(cred => {
@@ -63,12 +59,14 @@ const actions = {
         roles: {
           admin: true}
       }
-      db.collection('wolluk-users').add(newUser)
       commit('setUser', newUser)
+      db.collection('wolluk-users').add(newUser)
     })
-    commit('setLoading', false)
-    commit('setError', false)
-    router.push({name: 'Home'})
+    .then(() => {
+      commit('setLoading', false)
+      commit('setError', false)
+      router.push({name: 'Home'})
+    })
     .catch(error => {
       commit('setError', error.message)
       commit('setLoading', false)
@@ -78,9 +76,11 @@ const actions = {
     commit('setLoading', true)
     firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
     .then(cred => {
-      commit('setUser', {id: cred.user.uid,
+      commit('setUser', {
+        id: cred.user.uid,
         email: cred.user.email
       })
+      db.collection('wolluk-users').get()
       commit('setLoading', false)
       commit('setError', null)
       router.push({name: 'Home'})
