@@ -27,7 +27,7 @@ const getters = {
     return state.user !== null && state.user !== undefined
   },
   isAdmin (state) {
-    return state.user !== null && state.user.roles.admin === true
+    return state.user !== null && state.user.roles && state.user.roles.admin === true
   },
   error (state) {
     return state.error
@@ -105,9 +105,9 @@ const actions = {
       commit('setLoading', false)
     })
   },
-  autoSignIn ({commit}, payload) {
-    commit('setUser', { email: payload.email })
-  },
+  // autoSignIn ({commit}, payload) {
+  //   commit('setUser', { email: payload.email })
+  // },
   userSignOut ({commit}) {
     firebase.auth().signOut().then(() => {
       commit('setUser', null)

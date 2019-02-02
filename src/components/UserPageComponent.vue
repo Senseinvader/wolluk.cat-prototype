@@ -18,7 +18,7 @@
             <v-btn flat class='red--text' @click='openPassForm'>reset password</v-btn>
           </v-layout>
           <v-layout row wrap justify-center>
-            <v-flex xs12 md12 v-if="passFormVisibility">
+            <v-flex xs12 md12 v-if="passForm">
               <v-form ref='form'>
                 <!-- <v-text-field v-for="(item, itemName) in itemsPass" :key="itemName"
                   label="item.label"
@@ -63,7 +63,7 @@
           <v-divider></v-divider>
           <v-layout row wrap justify-center pa-4>
             <v-btn flat class='green--text'>cancel</v-btn>
-            <v-btn dark color='green' @click='handleUpdate' :to="{name:'Home'}">submit</v-btn>
+            <v-btn dark color='green' @click='handleUpdate' :disabled='role' :to="{name:'Home'}">submit</v-btn>
           </v-layout>
         </v-form>
       </v-flex>
@@ -73,7 +73,6 @@
 
 
 <script>
-import uuid from 'uuid/v1'
 
 export default {
   name: 'UserAccount',
@@ -88,12 +87,9 @@ export default {
       type: Boolean
     }
   },
-  // created () {
-  //   this.user = this.$store.getters['auth/activeUser']
-  // },
   data () {
     return {
-      userSlug: this.$route.params.user_name,
+      role: false,
       nameRules: [
         v => !!v || 'Name is required',
         v => (v && v.length < 20) || 'Name must be less than 20 characters'
@@ -139,17 +135,47 @@ export default {
       ]
     }
   },
+  computed: {
+    isAdmin () {
+      return this.user.roles.admin
+    },
+    isEditor () {
+      return this.user.roles.editor
+    },
+    isTranslator () {
+      return this.user.roles.translator
+    },
+    isDesigner () {
+      return this.user.roles.designer
+    }
+  },
   watch: {
     match: 'validateField',
-    model: 'validateField'
+    model: 'validateField',
+    isAdmin (value) {
+      if (value) {
+        this.role = true
+      }
+    },
+    isEditor (value) {
+      if (value) {
+        this.role = true
+      }
+    },
+    isTranslator (value) {
+      if (value) {
+        this.role = true
+      }
+    },
+    isDesigner (value) {
+      if (value) {
+        this.role = true
+      }
+    }
   },
   methods: {
     handleUpdate () {
-      if (!this.user.id) {
-        this.user.id = uuid()
-      }
       this.$store.dispatch('users/mutateUser', this.user)
-      console.log(this.user.id)
     },
     openPassForm () {
       this.passForm = true
