@@ -13,7 +13,7 @@
             v-flex
               v-text-field#confirmPassword(name='confirmPassword', v-model='passwordConfirm', label='Confirm Password', type='password', required='', :rules='[comparePasswords]')
             v-flex.text-xs-center(mt-5='')
-              v-btn(color='primary', type='submit', :disabled="loading") Sign Up
+              v-btn(color='primary', type='submit') Sign Up
             v-flex
               v-alert(type='error', dismissible='', v-model='alert') {{ error }}
 </template>

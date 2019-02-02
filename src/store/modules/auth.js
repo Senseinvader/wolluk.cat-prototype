@@ -6,7 +6,8 @@ import slugify from 'slugify'
 const state = {
   user: null,
   error: null,
-  loading: false
+  loading: false,
+  slug: null
 }
 
 const mutations = {
@@ -41,49 +42,63 @@ const getters = {
 const actions = {
   userSignUp ({commit}, payload) {
     commit('setLoading', true)
-    firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
-    .then(cred => {
-      commit('setUser', {
-        id: cred.user.uid,
-        email: cred.user.email
-      })
-      let newUser = {
-        id: cred.user.uid, // this is id similar to Firebase (auto gen.)
-        displayName: null,
-        email: cred.user.email,
-        slug: slugify(cred.user.email, {
-          replacement: '-',
-          remove: /[*+~.()'"!:@]/g,
-          lower: true
-        }),
-        roles: {
-          admin: true}
+    state.slug = slugify(payload.email, {
+      replacement: '-',
+      remove: /[*+~.()'"!:@]/g,
+      lower: true
+    })
+    let ref = db.collection('wolluk-users').doc(state.slug)
+    ref.get().then(doc => {
+      if (doc.exists) {
+        commit('setError', 'User with this email already exists')
+      } else {
+        firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+        .then(cred => {
+          let newUser = {
+            id: cred.user.uid, // this is id similar to Firebase (auto gen.)
+            displayName: null,
+            email: cred.user.email,
+            slug: state.slug,
+            roles: {
+              admin: true}
+          }
+          commit('setUser', newUser)
+          ref.set(newUser)
+        })
+        .then(() => {
+          commit('setLoading', false)
+          commit('setError', false)
+          router.push({name: 'Home'})
+        })
+        .catch(error => {
+          commit('setError', error.message)
+          commit('setLoading', false)
+        })
       }
-      commit('setUser', newUser)
-      db.collection('wolluk-users').add(newUser)
-    })
-    .then(() => {
-      commit('setLoading', false)
-      commit('setError', false)
-      router.push({name: 'Home'})
-    })
-    .catch(error => {
-      commit('setError', error.message)
-      commit('setLoading', false)
     })
   },
   userSignIn ({commit}, payload) {
     commit('setLoading', true)
     firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
     .then(cred => {
-      commit('setUser', {
-        id: cred.user.uid,
-        email: cred.user.email
+      state.slug = slugify(cred.user.email, {
+        replacement: '-',
+        remove: /[*+~.()'"!:@]/g,
+        lower: true
       })
-      db.collection('wolluk-users').get()
-      commit('setLoading', false)
-      commit('setError', null)
-      router.push({name: 'Home'})
+      db.collection('wolluk-users').doc(state.slug).get()
+      .then(doc => {
+        if (doc.exists) {
+          let data = doc.data()
+          commit('setUser', data)
+          router.push({name: 'Home'})
+          commit('setLoading', false)
+          commit('setError', null)
+          console.log(data)
+        } else {
+          commit('setError', 'User not found')
+        }
+      })
     })
     .catch(error => {
       commit('setError', error.message)
