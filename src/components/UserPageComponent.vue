@@ -175,6 +175,7 @@ export default {
   },
   methods: {
     handleUpdate () {
+      console.log(this.user.displayName)
       this.$store.dispatch('users/mutateUser', this.user)
     },
     openPassForm () {

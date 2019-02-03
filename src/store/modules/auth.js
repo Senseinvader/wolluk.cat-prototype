@@ -55,7 +55,7 @@ const actions = {
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(cred => {
           let newUser = {
-            id: cred.user.uid, // this is id similar to Firebase (auto gen.)
+            id: cred.user.uid,
             displayName: null,
             email: cred.user.email,
             slug: state.slug,

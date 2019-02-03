@@ -67,10 +67,7 @@ export default {
   },
   created () {
     this.$store.dispatch('users/updateRegisteredUsers')
-  },
-  mounted () {
-    console.log(this.$store.getters['users/registeredUsers'])
-    console.log(this.$store.getters['users/filteredUsers'])
+    this.$store.dispatch('users/clearFilteredUsers')
   },
   destroyed () {
     this.$store.dispatch('users/clearFilteredUsers')

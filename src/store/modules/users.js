@@ -1,5 +1,5 @@
-import slugify from 'slugify'
-import firebase from 'firebase'
+// import slugify from 'slugify'
+// import firebase from 'firebase'
 import db from '../../main'
 
 const state = {
@@ -57,23 +57,37 @@ const getters = {
   }
 }
 const actions = {
-  mutateUser ({commit}, payload) {
-    payload.slug = slugify(payload.email, {
-      replacement: '-',
-      remove: /[*+~.()'"!:@]/g,
-      lower: true
-    })
-    console.log(payload.slug)
-    let userToUpdate = state.registeredUsers.find(user => user.id === payload.id)
-    if (state.registeredUsers.indexOf(userToUpdate) !== -1) {
-      console.log('yes we can update')
-      commit('mutateUser', payload)
+  //  This action receives User object from UserPageComponent and depending on Context
+  //  (whether that user is to create or update) dispatches editUser of createUser action
+  mutateUser ({dispatch}, payload) {
+    if (payload.id) {
+      dispatch('editUser', payload)
     } else {
-      commit('addUser', payload)
+      console.log('this user doesnt exist in database')
     }
   },
   clearFilteredUsers ({commit}) {
     commit('clearFilteredUsers')
+  },
+  //  This action sets new data about existing user to the database, then dispatches
+  editUser ({dispatch}, payload) {
+    console.log(payload.slug)
+    db.collection('wolluk-users').where('id', '==', payload.id).get()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        console.log(doc.id)
+        db.collection('wolluk-users').doc(doc.id)
+        .update({
+          displayName: payload.displayName,
+          email: payload.email,
+          slug: payload.slug,
+          roles: payload.roles
+        })
+      })
+    })
+    .catch(error => {
+      console.log(error.message)
+    })
   },
   deleteUser ({commit}, payload) {
     console.log(state.registeredUsers)
@@ -86,10 +100,17 @@ const actions = {
     db.collection('wolluk-users').onSnapshot(snapshot => {
       snapshot.docChanges().forEach(change => {
         let doc = change.doc
-        console.log(doc.data())
-        updatedRegusteredUsers.push(doc.data())
+        let newUser = {
+          id: doc.data().id,
+          email: doc.data().email,
+          displayName: doc.data().displayName,
+          slug: doc.data().slug,
+          roles: doc.data().roles
+        }
+        updatedRegusteredUsers.push(newUser)
       })
     })
+    console.log('whatdafuc?', updatedRegusteredUsers[0])
     commit('updateRegisteredUsers', updatedRegusteredUsers)
   },
   findUsers ({commit, dispatch}, payload) {
