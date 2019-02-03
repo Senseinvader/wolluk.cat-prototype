@@ -115,6 +115,9 @@ const actions = {
     firebase.auth().signOut().then(() => {
       commit('setUser', null)
       commit('setError', null)
+      // Nullify inforamtion loaded from database on logout
+      commit('users/updateRegisteredUsers', null)
+      commit('setUser', null)
       router.push({ name: 'Landing' })
     })
   }
