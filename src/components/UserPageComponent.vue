@@ -29,7 +29,8 @@
                   @click:append="item.visibility = !item.visibility"
                   ></v-text-field> -->
                 <v-text-field 
-                  label="Old Password" 
+                  label="Old Password"
+                  v-model='oldPassword'
                   :rules="oldPassRules" 
                   required 
                   :append-icon="show1 ? 'visibility_off' : 'visibility'"
@@ -95,8 +96,8 @@ export default {
         v => (v && v.length < 20) || 'Name must be less than 20 characters'
       ],
       oldPassRules: [
-        v => !!v || 'Field is reuquired',
-        v => (v === this.user.password) || 'Wrong current password'
+        v => !!v || 'Field is reuquired'
+        // v => (v === this.user.password) || 'Wrong current password'
       ],
       newPassRules: [
         v => v === this.match || 'Passwords does not match'
@@ -111,28 +112,29 @@ export default {
       show1: false,
       show2: false,
       show3: false,
-      itemsPass: [
-        { label: 'Old Password',
-          rules: [
-            v => !!v || 'Field is reuquired',
-            v => (v === this.user.password) || 'Wrong current password'
-          ],
-          visibility: this.show1,
-          model: undefined
-        },
-        { label: 'New Password',
-          rules: undefined,
-          visibility: false,
-          model: this.match
-        },
-        { label: 'Repeat New Password',
-          rules: [
-            v => v === this.match || 'Passwords does not match'
-          ],
-          visibility: false,
-          model: this.model
-        }
-      ]
+      oldPassword: null
+      // itemsPass: [
+      //   { label: 'Old Password',
+      //     rules: [
+      //       v => !!v || 'Field is reuquired',
+      //       v => (v === this.user.password) || 'Wrong current password'
+      //     ],
+      //     visibility: this.show1,
+      //     model: undefined
+      //   },
+      //   { label: 'New Password',
+      //     rules: undefined,
+      //     visibility: false,
+      //     model: this.match
+      //   },
+      //   { label: 'Repeat New Password',
+      //     rules: [
+      //       v => v === this.match || 'Passwords does not match'
+      //     ],
+      //     visibility: false,
+      //     model: this.model
+      //   }
+      // ]
     }
   },
   computed: {
@@ -175,7 +177,6 @@ export default {
   },
   methods: {
     handleUpdate () {
-      console.log(this.user.displayName)
       this.$store.dispatch('users/mutateUser', this.user)
     },
     openPassForm () {
@@ -187,7 +188,12 @@ export default {
     handleChangePass () {
       if (this.$refs.form.validate()) {
         this.passForm = false
+        this.user.oldPassword = this.oldPassword
         this.user.password = this.model
+        console.log('user email', this.user.email)
+        console.log('user oldpass', this.user.oldPassword)
+        console.log('user newpass', this.user.password)
+        this.$store.dispatch('users/changePassword', this.user)
       }
     },
     validateField () {

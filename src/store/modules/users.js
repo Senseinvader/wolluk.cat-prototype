@@ -1,6 +1,7 @@
 // import slugify from 'slugify'
-// import firebase from 'firebase'
+import firebase from 'firebase'
 import db from '../../main'
+import router from '@/router'
 
 const state = {
   registeredUsers: [],
@@ -28,7 +29,6 @@ const mutations = {
     state.filteredUsers = state.registeredUsers
   },
   deleteUser (state, payload) {
-    console.log('delete user')
     state.registeredUsers = payload
   },
   addUser (state, payload) {
@@ -36,7 +36,6 @@ const mutations = {
   },
   updateRegisteredUsers (state, payload) {
     state.registeredUsers = payload
-    console.log(state.registeredUsers)
   }
 }
 const getters = {
@@ -57,19 +56,49 @@ const getters = {
   }
 }
 const actions = {
+  changePassword ({commit}, payload) {
+    let user = firebase.auth().currentUser
+    console.log(payload.email)
+    let credential = firebase.auth.EmailAuthProvider.credential(
+      payload.email,
+      payload.oldPassword
+    )
+    // firebase.auth().signInWithEmailAndPassword(payload.email, payload.oldPassword)
+    // .then(() => {
+    //   console.log('reauthenticated successfully')
+    // })
+    // .then(() => {
+    // })
+    user.reauthenticateAndRetrieveDataWithCredential(credential)
+    .then(() => {
+      console.log('reauthenticated successfully')
+      user.updatePassword(payload.password)
+    })
+    .then(() => {
+      console.log('password changed successfully')
+      router.push({name: 'Home'})
+    })
+    .catch(error => {
+      console.log(error.message)
+    })
+  },
   //  This action receives User object from UserPageComponent and depending on Context
   //  (whether that user is to create or update) dispatches editUser of createUser action
   mutateUser ({dispatch}, payload) {
     if (payload.id) {
       dispatch('editUser', payload)
     } else {
+      //  TODO creating a user by admin
       console.log('this user doesnt exist in database')
     }
   },
+  // reinitiates filteredUsers equal to registaredUsers (all users)
   clearFilteredUsers ({commit}) {
     commit('clearFilteredUsers')
   },
-  //  This action sets new data about existing user to the database, then dispatches
+  //  This action sets new data about existing user to the database (at this stage only displayName)
+  //  It soesn't dispatch commit amy mutation or dispatch other action, cause all updated data is being
+  // listened by updateRegisteredUsers action/listener
   editUser ({dispatch}, payload) {
     console.log(payload.slug)
     db.collection('wolluk-users').where('id', '==', payload.id).get()
@@ -95,6 +124,8 @@ const actions = {
     console.log(state.registeredUsers.length, newRegisteredUsers.length)
     commit('deleteUser', newRegisteredUsers)
   },
+  //  This action is an event listener, which updates array of registered users each time
+  //  data was edited, added of deleted
   updateRegisteredUsers ({commit}) {
     let updatedRegusteredUsers = []
     db.collection('wolluk-users').onSnapshot(snapshot => {
@@ -113,8 +144,9 @@ const actions = {
     console.log('whatdafuc?', updatedRegusteredUsers[0])
     commit('updateRegisteredUsers', updatedRegusteredUsers)
   },
+  // This action filters all registered users based on given search criteras (as payload)
+  // and dispatches findUsers mutation to put only filtered users into filteredUsers array
   findUsers ({commit, dispatch}, payload) {
-    // TODO put in mutation payload all filtered users from filterSet (action payload)
     let nameResults = []
     let roleResults = []
     let results = []
@@ -162,3 +194,16 @@ export default {
   actions,
   mutations
 }
+// var user = firebase.auth().currentUser;
+// var credential = firebase.auth.EmailAuthProvider.credential(
+//   email,
+//   password
+// );
+// firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+//     .then()
+// // Prompt the user to re-provide their sign-in credentials
+
+// user.reauthenticateAndRetrieveDataWithCredential(credential).then(function() {
+//   // User re-authenticated.
+// }).catch(function(error) {
+//   // An error happened.
