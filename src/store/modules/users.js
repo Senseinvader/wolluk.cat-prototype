@@ -14,17 +14,22 @@ const state = {
       designer: {name: 'Designer', value: false}
     }
   },
-  filteredUsers: []
+  filteredUsers: [],
+  error: null
 }
 const mutations = {
+  // Mutation for localStorage version with previous search of a payload user in users array
   mutateUser (state, payload) {
     let userToUpdate = state.registeredUsers.find(user => user.id === payload.id)
     let userIndex = state.registeredUsers.indexOf(userToUpdate)
     state.registeredUsers[userIndex] = payload
   },
+  //  Mutatuon of filteredUsers array based on given payload - array of filtered users
   findUsers (state, payload) {
     state.filteredUsers = payload
   },
+  // Mutation reinitializes filteredUsers array to be equal to registeredUsers
+  //  being used on created() and destroyed() lifecyle hooks
   clearFilteredUsers (state) {
     state.filteredUsers = state.registeredUsers
   },
@@ -34,8 +39,13 @@ const mutations = {
   addUser (state, payload) {
     state.registeredUsers.push(payload)
   },
+  //  Mutation used to dinamically update registeredUsers array based on changes to it in database
+  // mutation used in firebase version
   updateRegisteredUsers (state, payload) {
     state.registeredUsers = payload
+  },
+  setError (state, payload) {
+    state.error = payload
   }
 }
 const getters = {
@@ -56,6 +66,7 @@ const getters = {
   }
 }
 const actions = {
+  //  This action changes password of an active user, does not commit mutations nor dispatches other actions
   changePassword ({commit}, payload) {
     let user = firebase.auth().currentUser
     console.log(payload.email)
@@ -63,23 +74,20 @@ const actions = {
       payload.email,
       payload.oldPassword
     )
-    // firebase.auth().signInWithEmailAndPassword(payload.email, payload.oldPassword)
-    // .then(() => {
-    //   console.log('reauthenticated successfully')
-    // })
-    // .then(() => {
-    // })
+    // Stage one - reauthenticate current user using given old password
     user.reauthenticateAndRetrieveDataWithCredential(credential)
     .then(() => {
       console.log('reauthenticated successfully')
+      // Stage two - change password to given new password
       user.updatePassword(payload.password)
     })
     .then(() => {
       console.log('password changed successfully')
+      commit('setError', null)
       router.push({name: 'Home'})
     })
     .catch(error => {
-      console.log(error.message)
+      commit('setError', error.message)
     })
   },
   //  This action receives User object from UserPageComponent and depending on Context
@@ -88,7 +96,7 @@ const actions = {
     if (payload.id) {
       dispatch('editUser', payload)
     } else {
-      //  TODO creating a user by admin
+      //  TODO creating a user from the admin account
       console.log('this user doesnt exist in database')
     }
   },
@@ -118,11 +126,9 @@ const actions = {
       console.log(error.message)
     })
   },
+  // TODO implement delete user from admin account
   deleteUser ({commit}, payload) {
     console.log(state.registeredUsers)
-    let newRegisteredUsers = state.registeredUsers.filter(user => user.id !== payload.id)
-    console.log(state.registeredUsers.length, newRegisteredUsers.length)
-    commit('deleteUser', newRegisteredUsers)
   },
   //  This action is an event listener, which updates array of registered users each time
   //  data was edited, added of deleted
@@ -141,6 +147,8 @@ const actions = {
         updatedRegusteredUsers.push(newUser)
       })
     })
+    // NOT UNDERSTOOD STATE OF THE ARRAY - ITEMS CANNOT BE GOT BY INDEX
+    // PRESUMABLY IT IS THE REASON WHY SEARCH ACTION DOESNT WORK WITH DYNAMIC ARRAYS
     console.log('whatdafuc?', updatedRegusteredUsers[0])
     commit('updateRegisteredUsers', updatedRegusteredUsers)
   },
@@ -150,6 +158,8 @@ const actions = {
     let nameResults = []
     let roleResults = []
     let results = []
+    // Check if filterSet has searchCriteria, based on it filters registeredUsers
+    // match displayName or email with the searchCriteria
     if (payload.searchCriteria.length) {
       nameResults = state.registeredUsers.filter(user => {
         console.log(user)
@@ -157,6 +167,7 @@ const actions = {
       })
       console.log('nameRes', nameResults)
     }
+    // Check if filterSet contains one or more roles marked, filters registeredUsers
     if (payload.admin) {
       let result = state.registeredUsers.filter(user => user.roles.admin)
       roleResults = [...roleResults, ...result]
@@ -175,6 +186,8 @@ const actions = {
       let result = state.registeredUsers.filter(user => user.roles.designer)
       roleResults = [...roleResults, ...result]
     }
+    // Based on results of filtering by searchCriteria and roles, in case they both not empty
+    // combines results
     if (roleResults.length && !nameResults.length) {
       results = roleResults
     } else if (roleResults.length && nameResults.length) {
@@ -194,16 +207,3 @@ export default {
   actions,
   mutations
 }
-// var user = firebase.auth().currentUser;
-// var credential = firebase.auth.EmailAuthProvider.credential(
-//   email,
-//   password
-// );
-// firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
-//     .then()
-// // Prompt the user to re-provide their sign-in credentials
-
-// user.reauthenticateAndRetrieveDataWithCredential(credential).then(function() {
-//   // User re-authenticated.
-// }).catch(function(error) {
-//   // An error happened.

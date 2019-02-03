@@ -60,6 +60,9 @@
                 </v-layout>            
               </v-form>
             </v-flex>
+            <v-flex>
+              <v-alert type='error' dismissible v-model='alert'>{{ error }}</v-alert>
+            </v-flex>
           </v-layout>
           <v-divider></v-divider>
           <v-layout row wrap justify-center pa-4>
@@ -91,6 +94,7 @@ export default {
   data () {
     return {
       role: false,
+      alert: false,
       nameRules: [
         v => !!v || 'Name is required',
         v => (v && v.length < 20) || 'Name must be less than 20 characters'
@@ -149,6 +153,9 @@ export default {
     },
     isDesigner () {
       return this.user.roles.designer
+    },
+    error () {
+      return this.$store.state.users.error
     }
   },
   watch: {
@@ -172,6 +179,16 @@ export default {
     isDesigner (value) {
       if (value) {
         this.role = true
+      }
+    },
+    error (value) {
+      if (value) {
+        this.alert = true
+      }
+    },
+    alert (value) {
+      if (!value) {
+        this.$store.commit('users/setError', null)
       }
     }
   },
