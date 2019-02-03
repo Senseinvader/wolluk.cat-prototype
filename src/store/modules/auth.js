@@ -116,7 +116,7 @@ const actions = {
       commit('setUser', null)
       commit('setError', null)
       // Nullify inforamtion loaded from database on logout
-      commit('users/updateRegisteredUsers', null)
+      commit('users/updateRegisteredUsers', null, { root: true })
       commit('setUser', null)
       router.push({ name: 'Landing' })
     })
