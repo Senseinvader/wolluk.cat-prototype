@@ -47,11 +47,13 @@ const actions = {
       remove: /[*+~.()'"!:@]/g,
       lower: true
     })
+    // Action first checks if no email matches exist in the database (by comparing slugs)
     let ref = db.collection('wolluk-users').doc(state.slug)
     ref.get().then(doc => {
       if (doc.exists) {
         commit('setError', 'User with this email already exists')
       } else {
+        // Second creates new user to authentication database
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(cred => {
           let newUser = {
@@ -63,6 +65,7 @@ const actions = {
               admin: true}
           }
           commit('setUser', newUser)
+          // Third creates document with information about new user in wolluk-users collection
           ref.set(newUser)
         })
         .then(() => {
