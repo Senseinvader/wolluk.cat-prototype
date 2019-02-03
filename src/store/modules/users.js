@@ -66,6 +66,7 @@ const state = {
   filteredUsers: []
 }
 const mutations = {
+  // Mutation for localStorage version with previous search of a payload user in users array
   mutateUser (state, payload) {
     let userToUpdate = state.registeredUsers.find(user => user.id === payload.id)
     let userIndex = state.registeredUsers.indexOf(userToUpdate)
@@ -74,6 +75,8 @@ const mutations = {
   findUsers (state, payload) {
     state.filteredUsers = payload
   },
+  // Mutation reinitializes filteredUsers array to be equal to registeredUsers
+  //  being used on created() and destroyed() lifecyle hooks
   clearFilteredUsers (state) {
     state.filteredUsers = state.registeredUsers
   },
@@ -92,9 +95,6 @@ const getters = {
   allUsers (state) {
     return state.registeredUsers
   },
-  // userByEmail (state, email) {
-  //   return state.registeredUsers.find(user => user.email === email)
-  // },
   filteredUsers (state) {
     return state.filteredUsers
   },
@@ -110,12 +110,13 @@ const getters = {
 }
 const actions = {
   mutateUser ({commit}, payload) {
+    // Slug is created based on email address and used for routing (instead of ids)
     payload.slug = slugify(payload.email, {
       replacement: '-',
       remove: /[*+~.()'"!:@]/g,
       lower: true
     })
-    console.log(payload.slug)
+    // If user is in array, data is updated, othewise is pushed to array
     let userToUpdate = state.registeredUsers.find(user => user.id === payload.id)
     if (state.registeredUsers.indexOf(userToUpdate) !== -1) {
       console.log('yes we can update')
@@ -124,29 +125,33 @@ const actions = {
       commit('addUser', payload)
     }
   },
+  // Action to reinitialize filteredUsers equal to registaredUsers (all users)
   clearFilteredUsers ({commit}) {
     commit('clearFilteredUsers')
   },
   deleteUser ({commit}, payload) {
-    console.log(state.registeredUsers)
     let newRegisteredUsers = state.registeredUsers.filter(user => user.id !== payload.id)
-    console.log(state.registeredUsers.length, newRegisteredUsers.length)
     commit('deleteUser', newRegisteredUsers)
   },
   // digestRegisteredUsers ({commit}) {
   //   commit('digestRegisteredUsers', state.initialRegisteredUsers)
   // },
+
+  // This action filters all registered users based on given search criteras (as payload)
+  // and dispatches findUsers mutation to put only filtered users into filteredUsers array
   findUsers ({commit, dispatch}, payload) {
-    // TODO put in mutation payload all filtered users from filterSet (action payload)
     let nameResults = []
     let roleResults = []
     let results = []
+    // Check if filterSet has searchCriteria, based on it filters registeredUsers
+    // match displayName or email with the searchCriteria
     if (payload.searchCriteria.length) {
       nameResults = state.registeredUsers.filter(user => {
         return user.email.match(payload.searchCriteria) || user.displayName.toLowerCase().match(payload.searchCriteria)
       })
       console.log('nameRes', nameResults)
     }
+    // Check if filterSet contains one or more roles marked, filters registeredUsers
     if (payload.admin) {
       let result = state.registeredUsers.filter(user => user.roles.admin)
       roleResults = [...roleResults, ...result]
@@ -165,6 +170,8 @@ const actions = {
       let result = state.registeredUsers.filter(user => user.roles.designer)
       roleResults = [...roleResults, ...result]
     }
+    // Based on results of filtering by searchCriteria and roles, in case they both not empty
+    // combines results
     if (roleResults.length && !nameResults.length) {
       results = roleResults
     } else if (roleResults.length && nameResults.length) {
