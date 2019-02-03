@@ -2,7 +2,7 @@ import slugify from 'slugify'
 
 const state = {
   registeredUsers: [
-    {id: '-LWMS-pfJ937K4iwRlkj', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937K4iwRlkj',
       displayName: 'Tomek Drazek',
       email: 'tomek@wolluk.com',
       password: 'pass',
@@ -12,7 +12,7 @@ const state = {
         editor: false,
         translator: false,
         designer: false}},
-    {id: '-LWMS-pfJ937K4i4001llp', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937K4i4001llp',
       displayName: 'Janusz Cebula',
       email: 'janusz@example.com',
       password: 'pass',
@@ -22,7 +22,7 @@ const state = {
         editor: true,
         translator: false,
         designer: false}},
-    {id: '-LWMS-pfJ937K4i3651lcv', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937K4i3651lcv',
       displayName: 'John Doe',
       email: 'john@example.com',
       password: 'pass',
@@ -32,7 +32,7 @@ const state = {
         editor: false,
         translator: true,
         designer: false}},
-    {id: '-LWMS-pfJ937R8i3651lrt', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937R8i3651lrt',
       displayName: 'Tomas Piper',
       email: 'pete@example.com',
       password: 'pass',
@@ -42,7 +42,7 @@ const state = {
         editor: false,
         translator: true,
         designer: false}},
-    {id: '-LWMS-pfJ937R886951lee', // this is id similar to Firebase (auto gen.)
+    {id: '-LWMS-pfJ937R886951lee',
       displayName: 'Tomas Connor',
       email: 'tom1@example.com',
       password: 'pass',
