@@ -6,6 +6,12 @@ import router from './router'
 import { store } from './store'
 import * as firebase from 'firebase'
 import colors from 'vuetify/es5/util/colors'
+import { API_KEY,
+  authDomain,
+  databaseURL,
+  projectId,
+  storageBucket,
+  messagingSenderId } from './firebase/initData'
 
 // A-la'carte components goes here:
 import {
@@ -100,12 +106,12 @@ new Vue({
   render: h => h(App),
   created () {
     firebaseApp = firebase.initializeApp({
-      apiKey: 'AIzaSyCRZto2-DZnlKR_k_6RXmCvZkeK7C5pNVM',
-      authDomain: 'wolluk-db.firebaseapp.com',
-      databaseURL: 'https://wolluk-db.firebaseio.com',
-      projectId: 'wolluk-db',
-      storageBucket: 'wolluk-db.appspot.com',
-      messagingSenderId: '764993399879'
+      apiKey: API_KEY,
+      authDomain: authDomain,
+      databaseURL: databaseURL,
+      projectId: projectId,
+      storageBucket: storageBucket,
+      messagingSenderId: messagingSenderId
 
     })
     firebaseApp.firestore().settings({timestampsInSnapshots: true})
