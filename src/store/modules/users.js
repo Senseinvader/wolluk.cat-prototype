@@ -31,7 +31,7 @@ const mutations = {
   // Mutation reinitializes filteredUsers array to be equal to registeredUsers
   //  being used on created() and destroyed() lifecyle hooks
   clearFilteredUsers (state) {
-    state.filteredUsers = state.registeredUsers
+    state.filteredUsers = JSON.parse(JSON.stringify(state.registeredUsers))
   },
   deleteUser (state, payload) {
     state.registeredUsers = payload
@@ -43,6 +43,7 @@ const mutations = {
   // mutation used in firebase version
   updateRegisteredUsers (state, payload) {
     state.registeredUsers = payload
+    console.log(state.registeredUsers)
   },
   setError (state, payload) {
     state.error = payload
@@ -69,7 +70,6 @@ const actions = {
   //  This action changes password of an active user, does not commit mutations nor dispatches other actions
   changePassword ({commit}, payload) {
     let user = firebase.auth().currentUser
-    console.log(payload.email)
     let credential = firebase.auth.EmailAuthProvider.credential(
       payload.email,
       payload.oldPassword
