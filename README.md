@@ -2,6 +2,11 @@
 
 Hi!
 Before stert please run
+``` bash
+npm install
+```
+as packajes.json was updated.
+The laset version of code for the first part of the assignment can be found on the admin branch ``` bash admin ```
 
 
 ## Build Setup
