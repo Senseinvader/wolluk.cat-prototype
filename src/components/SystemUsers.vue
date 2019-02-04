@@ -99,10 +99,3 @@ export default {
   display: inline-block;
 }
 </style>
-
-
-  // v-container(fluid='')
-  //   h1 The users dashboard
-  //   v-layout(row='', wrap='')
-  //     v-flex(xs12='' sm6='' md6='' v-for='user in filteredUsers' :key='user.id')          
-  //       v-card.text-xs-center.ma-3 {{ user.displayName }}

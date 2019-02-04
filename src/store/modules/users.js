@@ -77,11 +77,13 @@ const mutations = {
   // Mutation reinitializes filteredUsers array to be equal to allUsers
   //  being used on created() and destroyed() lifecyle hooks
   clearFilteredUsers (state) {
-    state.filteredUsers = state.allUsers
+    state.filteredUsers = JSON.parse(JSON.stringify(state.allUsers))
   },
   deleteUser (state, payload) {
-    console.log('delete user')
-    state.allUsers = payload
+    console.log('delete user', payload.email)
+    let indexOfItemToDelete = state.allUsers.findIndex(user => user.email === payload.email)
+    console.log('index', indexOfItemToDelete)
+    state.allUsers.splice(indexOfItemToDelete, 1)
   },
   addUser (state, payload) {
     state.allUsers.push(payload)
@@ -119,6 +121,7 @@ const actions = {
       commit('mutateUser', payload)
     } else {
       commit('addUser', payload)
+      commit('clearFilteredUsers')
     }
   },
   // Action to reinitialize filteredUsers equal to registaredUsers (all users)
@@ -126,8 +129,8 @@ const actions = {
     commit('clearFilteredUsers')
   },
   deleteUser ({commit}, payload) {
-    let newAllUsers = state.allUsers.filter(user => user.id !== payload.id)
-    commit('deleteUser', newAllUsers)
+    commit('deleteUser', payload)
+    commit('clearFilteredUsers')
   },
   // digestallUsers ({commit}) {
   //   commit('digestallUsers', state.initialallUsers)
@@ -135,12 +138,16 @@ const actions = {
 
   // This action filters all registered users based on given search criteras (as payload)
   // and dispatches findUsers mutation to put only filtered users into filteredUsers array
-  findUsers ({commit, dispatch}, payload) {
+  findUsers ({commit}, payload) {
     let nameResults = []
     let roleResults = []
     let results = []
     // Check if filterSet has searchCriteria, based on it filters allUsers
     // match displayName or email with the searchCriteria
+    if (payload.searchCriteria.length < 1 && !payload.admin && !payload.translator && !payload.editor && !payload.designer) {
+      commit('clearFilteredUsers')
+      return
+    }
     if (payload.searchCriteria.length) {
       nameResults = state.allUsers.filter(user => {
         return user.email.match(payload.searchCriteria) || user.displayName.toLowerCase().match(payload.searchCriteria)
@@ -160,7 +167,6 @@ const actions = {
       console.log(payload.translator)
       let result = state.allUsers.filter(user => user.roles.translator)
       roleResults = [...roleResults, ...result]
-      console.log('roleRes', roleResults)
     }
     if (payload.designer) {
       let result = state.allUsers.filter(user => user.roles.designer)
@@ -168,14 +174,14 @@ const actions = {
     }
     // Based on results of filtering by searchCriteria and roles, in case they both not empty
     // combines results
-    if (roleResults.length && !nameResults.length) {
-      results = roleResults
-    } else if (roleResults.length && nameResults.length) {
+    if (roleResults.length && nameResults.length) {
       results = nameResults.filter(element => roleResults.includes(element))
+    } else if (roleResults.length && !nameResults.length) {
+      results = roleResults
     } else if (nameResults.length && !roleResults.length) {
       results = nameResults
     } else {
-      results = state.allUsers
+      results = null
     }
     commit('findUsers', results)
   }

@@ -41,7 +41,6 @@ const actions = {
     router.push('/home')
   },
   userSignIn ({rootState, commit}, payload) {
-    console.log(rootState.users.allUsers)
     let users = rootState.users.allUsers
     let foundUser = null
     users.forEach(user => {
