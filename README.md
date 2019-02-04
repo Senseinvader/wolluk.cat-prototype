@@ -1,3 +1,9 @@
+##Instructions for examining the code
+
+Hi!
+Before stert please run
+
+
 ## Build Setup
 
 ``` bash
