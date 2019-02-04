@@ -40,9 +40,9 @@ const actions = {
     commit('setUser', { email: payload.email })
     router.push('/home')
   },
-  userSignIn ({commit, rootState}, payload) {
-    let users = rootState.users.registeredUsers
-    console.log(users)
+  userSignIn ({rootState, commit}, payload) {
+    console.log(rootState.users.allUsers)
+    let users = rootState.users.allUsers
     let foundUser = null
     users.forEach(user => {
       if (user.email === payload.email && user.password === payload.password) {

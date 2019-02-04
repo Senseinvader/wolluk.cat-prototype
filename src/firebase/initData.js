@@ -1,0 +1,6 @@
+export const API_KEY = 'AIzaSyCRZto2-DZnlKR_k_6RXmCvZkeK7C5pNVM'
+export const authDomain = 'wolluk-db.firebaseapp.com'
+export const databaseURL = 'https://wolluk-db.firebaseio.com'
+export const projectId = 'wolluk-db'
+export const storageBucket = 'wolluk-db.appspot.com'
+export const messagingSenderId = '764993399879'
