@@ -62,7 +62,6 @@ const state = {
       designer: {name: 'Designer', value: false}
     }
   },
-  // registeredUsers: [],
   filteredUsers: []
 }
 const mutations = {

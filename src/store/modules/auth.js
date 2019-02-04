@@ -42,6 +42,7 @@ const actions = {
   },
   userSignIn ({commit, rootState}, payload) {
     let users = rootState.users.registeredUsers
+    console.log(users)
     let foundUser = null
     users.forEach(user => {
       if (user.email === payload.email && user.password === payload.password) {
