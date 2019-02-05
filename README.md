@@ -3,7 +3,7 @@
 Hi!
 Before start please run ``` npm install ```as ```packajes.json``` was updated.
 
-The laset version of code for the first part of the assignment can be found on the admin branch ``` admin ```. Requirements of the **issue #2** fulfilled except **gravatar**. Also adding and deleting users doesn't work correctly as the code uses from hardcoded array of users which rewrites all changes.
+The laset version of code for the first part of the assignment can be found on the admin branch ``` admin ```. Requirements of the **issue #2** fulfilled except **gravatar**.
 
 Code for the **issue #2** can be found on the branch ``` firebase```. Here You can test functionality of a signed in user. Admin possibilities (editing application users data) were not implemented. Also search doesn't work.
 
