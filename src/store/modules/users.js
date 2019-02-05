@@ -43,7 +43,6 @@ const mutations = {
   // mutation used in firebase version
   updateRegisteredUsers (state, payload) {
     state.registeredUsers = payload
-    console.log(state.registeredUsers)
   },
   setError (state, payload) {
     state.error = payload
@@ -138,7 +137,7 @@ const actions = {
       snapshot.docChanges().forEach(change => {
         let doc = change.doc
         let newUser = {
-          id: doc.data().id,
+          id: doc.id,
           email: doc.data().email,
           displayName: doc.data().displayName,
           slug: doc.data().slug,
@@ -146,56 +145,56 @@ const actions = {
         }
         updatedRegusteredUsers.push(newUser)
       })
+      commit('updateRegisteredUsers', updatedRegusteredUsers)
+      commit('clearFilteredUsers')
     })
-    // NOT UNDERSTOOD STATE OF THE ARRAY - ITEMS CANNOT BE GOT BY INDEX
-    // PRESUMABLY IT IS THE REASON WHY SEARCH ACTION DOESNT WORK WITH DYNAMIC ARRAYS
-    console.log('whatdafuc?', updatedRegusteredUsers[0])
-    commit('updateRegisteredUsers', updatedRegusteredUsers)
   },
   // This action filters all registered users based on given search criteras (as payload)
   // and dispatches findUsers mutation to put only filtered users into filteredUsers array
-  findUsers ({commit, dispatch}, payload) {
+  findUsers ({commit}, payload) {
     let nameResults = []
     let roleResults = []
     let results = []
-    // Check if filterSet has searchCriteria, based on it filters registeredUsers
+    // Check if filterSet has searchCriteria, based on it filters allUsers
     // match displayName or email with the searchCriteria
+    if (payload.searchCriteria.length < 1 && !payload.admin && !payload.translator && !payload.editor && !payload.designer) {
+      commit('clearFilteredUsers')
+      return
+    }
     if (payload.searchCriteria.length) {
-      nameResults = state.registeredUsers.filter(user => {
-        console.log(user)
+      nameResults = state.allUsers.filter(user => {
         return user.email.match(payload.searchCriteria) || user.displayName.toLowerCase().match(payload.searchCriteria)
       })
       console.log('nameRes', nameResults)
     }
-    // Check if filterSet contains one or more roles marked, filters registeredUsers
+    // Check if filterSet contains one or more roles marked, filters allUsers
     if (payload.admin) {
-      let result = state.registeredUsers.filter(user => user.roles.admin)
+      let result = state.allUsers.filter(user => user.roles.admin)
       roleResults = [...roleResults, ...result]
     }
     if (payload.editor) {
-      let result = state.registeredUsers.filter(user => user.roles.editor)
+      let result = state.allUsers.filter(user => user.roles.editor)
       roleResults = [...roleResults, ...result]
     }
     if (payload.translator) {
       console.log(payload.translator)
-      let result = state.registeredUsers.filter(user => user.roles.translator)
+      let result = state.allUsers.filter(user => user.roles.translator)
       roleResults = [...roleResults, ...result]
-      console.log('roleRes', roleResults)
     }
     if (payload.designer) {
-      let result = state.registeredUsers.filter(user => user.roles.designer)
+      let result = state.allUsers.filter(user => user.roles.designer)
       roleResults = [...roleResults, ...result]
     }
     // Based on results of filtering by searchCriteria and roles, in case they both not empty
     // combines results
-    if (roleResults.length && !nameResults.length) {
-      results = roleResults
-    } else if (roleResults.length && nameResults.length) {
+    if (roleResults.length && nameResults.length) {
       results = nameResults.filter(element => roleResults.includes(element))
+    } else if (roleResults.length && !nameResults.length) {
+      results = roleResults
     } else if (nameResults.length && !roleResults.length) {
       results = nameResults
     } else {
-      results = state.registeredUsers
+      results = null
     }
     commit('findUsers', results)
   }
