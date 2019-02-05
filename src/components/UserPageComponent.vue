@@ -152,7 +152,7 @@ export default {
       console.log(this.user.id)
     },
     openPassForm () {
-      this.passForm = true
+      this.passFormVisibility = true
     },
     closePassForm () {
       this.passForm = false
